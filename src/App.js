@@ -1,23 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
+import Video from './Video';
+import { useState, useEffect } from 'react';
+import axios from './axios';
 
 function App() {
+
+  const [videos, setVideos] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      const req = await axios.get('/posts');
+      setVideos(req.data);
+    }
+
+    fetchData();
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="videos-container">
+        {
+          videos.map((video, i) => (
+            <Video
+              key={i}
+              url={video.url}
+              channel={video.channel}
+              desc={video.desc}
+              song={video.song}
+              likes={video.likes}
+              shares={video.shares}
+              messages={video.messages}
+            />
+          ))
+        }
+      </div>
     </div>
   );
 }
